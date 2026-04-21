@@ -1,1 +1,251 @@
-code
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NorthSky Lead Store – Buy Instant Roofing Leads</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body { background: linear-gradient(135deg, #0f172a 0%, #020617 100%); }
+    .lead-card:hover { transform: translateY(-4px); transition: all 0.2s ease; }
+  </style>
+</head>
+<body class="text-gray-200">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <h1 class="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent">
+        🛒 NorthSky Lead Store
+      </h1>
+      <p class="text-gray-400 mt-2">Instant roofing leads – buy now, get contact details immediately</p>
+    </div>
+
+    <!-- Contractor Identity -->
+    <div class="bg-slate-800/50 backdrop-blur rounded-2xl p-5 border border-slate-700 mb-8">
+      <div class="flex flex-col md:flex-row gap-4 items-end">
+        <div class="flex-1">
+          <label class="block text-sm font-medium mb-1">Your Contractor ID</label>
+          <input type="text" id="contractorId" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2" placeholder="e.g., RooferPro_42">
+        </div>
+        <div class="flex-1">
+          <label class="block text-sm font-medium mb-1">Your Email (for receipt)</label>
+          <input type="email" id="contractorEmail" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2" placeholder="you@example.com">
+        </div>
+        <button id="saveIdentityBtn" class="bg-cyan-600 hover:bg-cyan-500 px-6 py-2 rounded-lg font-semibold">Save ID</button>
+      </div>
+      <div id="identityStatus" class="text-xs text-gray-400 mt-2"></div>
+    </div>
+
+    <!-- Lead Store Grid -->
+    <div class="mb-6 flex justify-between items-center">
+      <h2 class="text-2xl font-semibold"><i class="fas fa-tags mr-2 text-amber-400"></i>Available Leads</h2>
+      <button id="refreshBtn" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+        <i class="fas fa-sync-alt"></i> Refresh
+      </button>
+    </div>
+    <div id="leadsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="col-span-full text-center py-12 text-gray-400">Loading available leads...</div>
+    </div>
+
+    <!-- Purchase Modal (show after successful purchase) -->
+    <div id="purchaseModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+      <div class="bg-slate-800 rounded-2xl max-w-md w-full p-6 border border-cyan-500/50">
+        <div class="text-center">
+          <i class="fas fa-check-circle text-5xl text-green-500 mb-3"></i>
+          <h3 class="text-2xl font-bold mb-2">Lead Purchased!</h3>
+          <p id="purchasedLeadInfo" class="text-gray-300 mb-4"></p>
+          <div class="bg-slate-900 rounded-xl p-4 text-left mb-4">
+            <p class="font-mono text-sm break-all" id="leadContactDetails"></p>
+          </div>
+          <button id="closeModalBtn" class="bg-cyan-600 hover:bg-cyan-500 px-6 py-2 rounded-lg">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- Configuration ----------
+    // Change this to your actual backend URL (e.g., https://northsky-backend.onrender.com)
+    const BACKEND_URL = '';  // Leave empty to use same origin (if backend serves this page)
+    // Stripe public key – replace with your own from Stripe Dashboard
+    const STRIPE_PUBLIC_KEY = 'pk_test_YourStripePublicKeyHere';
+    let stripe = null;
+    if (STRIPE_PUBLIC_KEY !== 'pk_test_YourStripePublicKeyHere') {
+      stripe = Stripe(STRIPE_PUBLIC_KEY);
+    }
+
+    // DOM elements
+    const contractorIdInput = document.getElementById('contractorId');
+    const contractorEmailInput = document.getElementById('contractorEmail');
+    const saveIdentityBtn = document.getElementById('saveIdentityBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const leadsGrid = document.getElementById('leadsGrid');
+    const identityStatus = document.getElementById('identityStatus');
+    const purchaseModal = document.getElementById('purchaseModal');
+    const purchasedLeadInfo = document.getElementById('purchasedLeadInfo');
+    const leadContactDetails = document.getElementById('leadContactDetails');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    // Load saved contractor identity
+    function loadIdentity() {
+      const savedId = localStorage.getItem('leadstore_contractor_id');
+      const savedEmail = localStorage.getItem('leadstore_contractor_email');
+      if (savedId) contractorIdInput.value = savedId;
+      if (savedEmail) contractorEmailInput.value = savedEmail;
+    }
+    function saveIdentity() {
+      const id = contractorIdInput.value.trim();
+      const email = contractorEmailInput.value.trim();
+      if (!id || !email) {
+        identityStatus.innerText = 'Both Contractor ID and Email are required to purchase leads.';
+        return;
+      }
+      localStorage.setItem('leadstore_contractor_id', id);
+      localStorage.setItem('leadstore_contractor_email', email);
+      identityStatus.innerText = 'Identity saved. You can now buy leads.';
+      setTimeout(() => identityStatus.innerText = '', 3000);
+    }
+
+    // Fetch leads for sale from backend
+    async function fetchForSaleLeads() {
+      try {
+        const url = BACKEND_URL ? `${BACKEND_URL}/api/leads/for-sale` : '/api/leads/for-sale';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Failed to fetch leads');
+        return await res.json();
+      } catch (err) {
+        console.error('Error fetching leads:', err);
+        return [];
+      }
+    }
+
+    // Render leads grid
+    async function renderLeads() {
+      leadsGrid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">Loading...</div>';
+      const leads = await fetchForSaleLeads();
+      if (leads.length === 0) {
+        leadsGrid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-400">No leads available for sale right now. Check back later.</div>';
+        return;
+      }
+      leadsGrid.innerHTML = '';
+      leads.forEach(lead => {
+        const card = document.createElement('div');
+        card.className = 'bg-slate-800/50 backdrop-blur rounded-2xl border border-slate-700 p-5 lead-card';
+        card.innerHTML = `
+          <div class="flex justify-between items-start mb-2">
+            <span class="text-xs font-mono text-cyan-400">${lead.id.slice(0,8)}...</span>
+            <span class="bg-amber-500/20 text-amber-300 text-xs px-2 py-0.5 rounded-full">$${lead.salePrice}</span>
+          </div>
+          <h3 class="text-xl font-bold">${escapeHtml(lead.name)}</h3>
+          <p class="text-gray-300 text-sm mt-1"><i class="fas fa-tools mr-1"></i>${escapeHtml(lead.service)}</p>
+          <p class="text-gray-400 text-sm mt-2"><i class="fas fa-map-marker-alt mr-1"></i>${escapeHtml(lead.city)} • ${escapeHtml(lead.postalCode)}</p>
+          <div class="mt-4 flex gap-2">
+            <button class="buy-now-btn w-full bg-green-600 hover:bg-green-500 py-2 rounded-lg font-semibold transition" data-id="${lead.id}" data-price="${lead.salePrice}" data-name="${escapeHtml(lead.name)}">
+              <i class="fas fa-bolt"></i> Buy Now $${lead.salePrice}
+            </button>
+          </div>
+        `;
+        leadsGrid.appendChild(card);
+      });
+      // Attach buy handlers
+      document.querySelectorAll('.buy-now-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const leadId = btn.getAttribute('data-id');
+          const price = parseFloat(btn.getAttribute('data-price'));
+          const leadName = btn.getAttribute('data-name');
+          initiatePurchase(leadId, price, leadName);
+        });
+      });
+    }
+
+    // Purchase flow: either Stripe Checkout or mock (if no Stripe key)
+    async function initiatePurchase(leadId, price, leadName) {
+      const contractorId = contractorIdInput.value.trim();
+      const contractorEmail = contractorEmailInput.value.trim();
+      if (!contractorId || !contractorEmail) {
+        alert('Please save your Contractor ID and Email first.');
+        return;
+      }
+      // If Stripe is configured, create a Checkout Session
+      if (stripe) {
+        try {
+          const response = await fetch(`${BACKEND_URL || ''}/create-checkout-session`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              leadId,
+              price,
+              contractorId,
+              contractorEmail,
+              leadName,
+            }),
+          });
+          const session = await response.json();
+          if (session.id) {
+            await stripe.redirectToCheckout({ sessionId: session.id });
+          } else {
+            alert('Failed to create checkout session: ' + (session.error || 'Unknown error'));
+          }
+        } catch (err) {
+          alert('Network error: ' + err.message);
+        }
+      } else {
+        // Mock purchase (for testing without Stripe)
+        if (confirm(`[MOCK MODE] Buy lead "${leadName}" for $${price}? No real charge.`)) {
+          try {
+            const res = await fetch(`${BACKEND_URL || ''}/api/leads/${leadId}/purchase`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ contractorId, paymentMethod: 'mock' }),
+            });
+            const data = await res.json();
+            if (data.success) {
+              // Show purchased lead info
+              purchasedLeadInfo.innerText = `Lead: ${data.lead.name} (${data.lead.service})`;
+              leadContactDetails.innerText = `📞 Contact: ${data.lead.contact}\n📍 Address: ${data.lead.postalCode}\n💰 Paid: $${data.lead.price}`;
+              purchaseModal.classList.remove('hidden');
+              renderLeads(); // refresh grid
+            } else {
+              alert('Purchase failed: ' + (data.error || 'Unknown error'));
+            }
+          } catch (err) {
+            alert('Error: ' + err.message);
+          }
+        }
+      }
+    }
+
+    // Stripe webhook success handling (after redirect)
+    function handleStripeSuccess() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('success') === 'true') {
+        // Show a success message and refresh leads
+        alert('Payment successful! Your lead details will appear below. Check your email.');
+        renderLeads();
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else if (urlParams.get('canceled') === 'true') {
+        alert('Payment canceled. No charge was made.');
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
+    }
+
+    // Event listeners
+    saveIdentityBtn.addEventListener('click', saveIdentity);
+    refreshBtn.addEventListener('click', renderLeads);
+    closeModalBtn.addEventListener('click', () => purchaseModal.classList.add('hidden'));
+
+    // Initial load
+    loadIdentity();
+    renderLeads();
+    handleStripeSuccess();
+
+    // Optional: auto-refresh every 30 seconds
+    setInterval(renderLeads, 30000);
+  </script>
+</body>
+</html>
