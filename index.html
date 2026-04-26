@@ -1,198 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>NorthSky Lead Store | Roofing Leads That Close Fast</title>
-<script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-  body {
-    background: radial-gradient(circle at top, #0b1220, #020617);
-    font-family: system-ui, sans-serif;
-    color: white;
-  }
+  <title>NorthSky Lead Store | Exclusive Contractor Leads</title>
 
-  .glass {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.08);
-  }
+  <script src="https://cdn.tailwindcss.com"></script>
 
-  .btn {
-    transition: 0.2s;
-  }
-  .btn:hover {
-    transform: scale(0.98);
-  }
+  <style>
+    body {
+      background: radial-gradient(circle at top, #0f172a, #020617);
+      font-family: system-ui, sans-serif;
+      color: white;
+    }
 
-  .hidden { display:none; }
-</style>
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn {
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: scale(0.98);
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- ================= LANDING ================= -->
-<section id="landing" class="min-h-screen flex items-center justify-center px-6 text-center">
-  <div class="max-w-2xl">
+  <!-- ================= HERO ================= -->
+  <section id="landing" class="min-h-screen flex items-center justify-center px-6 text-center">
+    <div class="max-w-3xl">
 
-    <h1 class="text-4xl md:text-6xl font-bold mb-4">
-      Roofing Leads That Close Jobs — Fast
-    </h1>
+      <p class="text-cyan-400 font-semibold mb-3">
+        NorthSky Lead Store
+      </p>
 
-    <p class="text-gray-300 mb-6">
-      Skip door knocking. Get verified homeowners actively requesting roofing work in your area.
-    </p>
+      <h1 class="text-4xl md:text-6xl font-bold mb-5 leading-tight">
+        Exclusive Contractor Leads<br />
+        That Actually Close
+      </h1>
 
-    <div class="glass p-6 rounded-2xl mb-6">
-      <p class="text-sm text-gray-300">
-        ✔ High-intent homeowner leads<br/>
-        ✔ Exclusive per contractor<br/>
-        ✔ Delivered instantly<br/>
-        ✔ Pay only for what you use
+      <p class="text-gray-300 text-lg mb-8">
+        Stop chasing cold prospects. Get verified homeowners actively requesting roofing, electrical,
+        and exterior services in your area.
+      </p>
+
+      <div class="glass rounded-2xl p-6 mb-8 text-left max-w-xl mx-auto">
+        <p class="text-sm text-gray-300 leading-7">
+          ✔ High-intent homeowner leads<br />
+          ✔ Exclusive delivery per contractor<br />
+          ✔ Instant lead access<br />
+          ✔ Pay monthly or per lead<br />
+          ✔ Built for contractors scaling fast
+        </p>
+      </div>
+
+      <button
+        onclick="goPricing()"
+        class="btn bg-cyan-500 text-black font-bold px-8 py-4 rounded-xl"
+      >
+        View Pricing & Unlock Access
+      </button>
+
+      <p class="text-xs text-gray-500 mt-5">
+        Trusted by contractors building 6–7 figure operations
       </p>
     </div>
+  </section>
 
-    <button onclick="goPricing()" class="btn bg-cyan-500 px-6 py-3 rounded-xl font-bold text-black">
-      View Pricing & Access Leads
-    </button>
+  <!-- ================= PRICING ================= -->
+  <section id="pricing" class="hidden min-h-screen flex items-center justify-center px-6 py-16">
+    <div class="max-w-6xl w-full text-center">
 
-    <p class="text-xs text-gray-500 mt-4">Trusted by roofing contractors scaling to 6–7 figures</p>
-  </div>
-</section>
+      <h2 class="text-4xl font-bold mb-4">
+        Choose Your Access Plan
+      </h2>
 
-<!-- ================= PRICING ================= -->
-<section id="pricing" class="hidden min-h-screen flex items-center justify-center px-6">
-  <div class="max-w-4xl w-full text-center">
+      <p class="text-gray-400 mb-12">
+        Flexible pricing for solo contractors, growing teams, and high-volume operators
+      </p>
 
-    <h2 class="text-3xl font-bold mb-10">Choose Your Plan</h2>
+      <div class="grid md:grid-cols-3 gap-6">
 
-    <div class="grid md:grid-cols-3 gap-6">
+        <!-- Starter -->
+        <div class="glass rounded-2xl p-8">
+          <h3 class="text-xl font-bold mb-2">Starter</h3>
+          <p class="text-4xl font-bold mb-2">$49<span class="text-lg">/mo</span></p>
+          <p class="text-sm text-gray-400 mb-6">
+            Great for owner-operators and small crews
+          </p>
 
-      <div class="glass p-6 rounded-2xl">
-        <h3 class="font-bold text-xl mb-2">Starter</h3>
-        <p class="text-3xl font-bold mb-2">$49/mo</p>
-        <p class="text-sm text-gray-400 mb-4">Perfect for small contractors</p>
-        <button onclick="openGate()" class="btn bg-white text-black px-4 py-2 rounded-xl w-full">
-          Get Access
-        </button>
+          <ul class="text-sm text-gray-300 space-y-2 mb-8">
+            <li>5 verified leads / month</li>
+            <li>Dashboard access</li>
+            <li>Basic quote tools</li>
+          </ul>
+
+          <button
+            onclick="openGate()"
+            class="btn bg-white text-black font-semibold px-4 py-3 rounded-xl w-full"
+          >
+            Get Access
+          </button>
+        </div>
+
+        <!-- Growth -->
+        <div class="glass rounded-2xl p-8 border border-cyan-500">
+          <p class="text-cyan-400 text-sm font-semibold mb-2">
+            MOST POPULAR
+          </p>
+
+          <h3 class="text-xl font-bold mb-2">Growth</h3>
+          <p class="text-4xl font-bold mb-2">$99<span class="text-lg">/mo</span></p>
+          <p class="text-sm text-gray-400 mb-6">
+            Built for scaling contractors
+          </p>
+
+          <ul class="text-sm text-gray-300 space-y-2 mb-8">
+            <li>15 exclusive leads / month</li>
+            <li>Priority lead delivery</li>
+            <li>Admin dashboard + CRM</li>
+          </ul>
+
+          <button
+            onclick="openGate()"
+            class="btn bg-cyan-500 text-black font-bold px-4 py-3 rounded-xl w-full"
+          >
+            Start Growth Plan
+          </button>
+        </div>
+
+        <!-- Elite -->
+        <div class="glass rounded-2xl p-8">
+          <h3 class="text-xl font-bold mb-2">Elite</h3>
+          <p class="text-4xl font-bold mb-2">$249<span class="text-lg">/mo</span></p>
+          <p class="text-sm text-gray-400 mb-6">
+            High-volume contractors and teams
+          </p>
+
+          <ul class="text-sm text-gray-300 space-y-2 mb-8">
+            <li>Unlimited lead access</li>
+            <li>Priority exclusive routing</li>
+            <li>Full backend + automation</li>
+          </ul>
+
+          <button
+            onclick="openGate()"
+            class="btn bg-white text-black font-semibold px-4 py-3 rounded-xl w-full"
+          >
+            Unlock Elite
+          </button>
+        </div>
       </div>
 
-      <div class="glass p-6 rounded-2xl border border-cyan-500">
-        <h3 class="font-bold text-xl mb-2">Growth</h3>
-        <p class="text-3xl font-bold mb-2">$99/mo</p>
-        <p class="text-sm text-gray-400 mb-4">Most popular choice</p>
-        <button onclick="openGate()" class="btn bg-cyan-500 text-black px-4 py-2 rounded-xl w-full">
-          Get Access
-        </button>
-      </div>
-
-      <div class="glass p-6 rounded-2xl">
-        <h3 class="font-bold text-xl mb-2">Elite</h3>
-        <p class="text-3xl font-bold mb-2">$249/mo</p>
-        <p class="text-sm text-gray-400 mb-4">High-volume contractors</p>
-        <button onclick="openGate()" class="btn bg-white text-black px-4 py-2 rounded-xl w-full">
-          Get Access
-        </button>
-      </div>
-
+      <button
+        onclick="backLanding()"
+        class="mt-10 text-sm text-gray-400 underline"
+      >
+        ← Back to Home
+      </button>
     </div>
+  </section>
 
-    <button onclick="backLanding()" class="mt-10 text-sm text-gray-400 underline">
-      ← Back
-    </button>
+  <!-- ================= ACCESS GATE ================= -->
+  <section id="gate" class="hidden min-h-screen flex items-center justify-center px-6">
+    <div class="glass rounded-2xl p-8 max-w-md w-full text-center">
 
-  </div>
-</section>
+      <h2 class="text-2xl font-bold mb-2">
+        Enter License Key
+      </h2>
 
-<!-- ================= ACCESS GATE ================= -->
-<section id="gate" class="hidden min-h-screen flex items-center justify-center px-6">
-  <div class="glass p-8 rounded-2xl max-w-md w-full text-center">
+      <p class="text-sm text-gray-400 mb-6">
+        Complete Stripe checkout or use your issued contractor access key
+      </p>
 
-    <h2 class="text-2xl font-bold mb-2">Enter License Key</h2>
-    <p class="text-sm text-gray-400 mb-4">Or complete Stripe checkout to receive one</p>
+      <input
+        id="key"
+        type="text"
+        placeholder="XXXX-XXXX-XXXX"
+        class="w-full p-4 rounded-xl bg-black border border-gray-700 text-center mb-4"
+      />
 
-    <input id="key" class="w-full p-3 rounded-xl bg-black border border-gray-700 text-center mb-4"
-      placeholder="XXXX-XXXX-XXXX"/>
+      <button
+        onclick="unlock()"
+        class="btn bg-cyan-500 text-black font-bold w-full py-4 rounded-xl"
+      >
+        Unlock Dashboard
+      </button>
 
-    <button onclick="unlock()" class="btn bg-cyan-500 text-black w-full py-3 rounded-xl font-bold">
-      Unlock Dashboard
-    </button>
+      <p id="error" class="text-red-400 text-sm mt-4"></p>
 
-    <p id="error" class="text-red-400 text-sm mt-3"></p>
-
-    <p class="text-xs text-gray-500 mt-4">
-      Demo Key: NSKY-LEADS-2026
-    </p>
-
-  </div>
-</section>
-
-<!-- ================= DASHBOARD ================= -->
-<section id="dashboard" class="hidden min-h-screen px-6 py-10">
-
-  <div class="max-w-5xl mx-auto">
-
-    <h1 class="text-3xl font-bold mb-6">Available Roofing Leads</h1>
-
-    <div id="leads" class="grid md:grid-cols-3 gap-4">
-
-      <div class="glass p-4 rounded-xl">
-        <h3 class="font-bold">John Miller</h3>
-        <p class="text-sm text-gray-400">Austin • Roof Repair</p>
-        <button class="mt-3 bg-green-500 text-black px-3 py-2 rounded-xl w-full">
-          Buy Lead — $49
-        </button>
-      </div>
-
-      <div class="glass p-4 rounded-xl">
-        <h3 class="font-bold">Sarah Lopez</h3>
-        <p class="text-sm text-gray-400">Denver • Replacement</p>
-        <button class="mt-3 bg-green-500 text-black px-3 py-2 rounded-xl w-full">
-          Buy Lead — $79
-        </button>
-      </div>
-
-      <div class="glass p-4 rounded-xl">
-        <h3 class="font-bold">Mike Johnson</h3>
-        <p class="text-sm text-gray-400">Phoenix • Inspection</p>
-        <button class="mt-3 bg-green-500 text-black px-3 py-2 rounded-xl w-full">
-          Buy Lead — $29
-        </button>
-      </div>
-
+      <p class="text-xs text-gray-500 mt-6">
+        Demo Access Key: NSKY-LEADS-2026
+      </p>
     </div>
+  </section>
 
-  </div>
+  <!-- ================= DASHBOARD ================= -->
+  <section id="dashboard" class="hidden min-h-screen px-6 py-12">
+    <div class="max-w-6xl mx-auto">
 
-</section>
+      <h1 class="text-4xl font-bold mb-2">
+        Available Exclusive Leads
+      </h1>
 
-<script>
-function goPricing(){
-  document.getElementById("landing").classList.add("hidden");
-  document.getElementById("pricing").classList.remove("hidden");
-}
+      <p class="text-gray-400 mb-8">
+        Purchase verified homeowner opportunities instantly
+      </p>
 
-function backLanding(){
-  document.getElementById("pricing").classList.add("hidden");
-  document.getElementById("landing").classList.remove("hidden");
-}
+      <div id="leads" class="grid md:grid-cols-3 gap-5">
 
-function openGate(){
-  document.getElementById("pricing").classList.add("hidden");
-  document.getElementById("gate").classList.remove("hidden");
-}
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="font-bold text-lg">John Miller</h3>
+          <p class="text-sm text-gray-400 mb-4">
+            Austin • Roof Repair
+          </p>
 
-function unlock(){
-  const key = document.getElementById("key").value;
-  if(key === "NSKY-LEADS-2026"){
-    document.getElementById("gate").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
-  } else {
-    document.getElementById("error").innerText = "Invalid license key";
-  }
-}
-</script>
+          <button class="bg-green-500 text-black font-bold px-4 py-3 rounded-xl w-full">
+            Buy Lead — $49
+          </button>
+        </div>
 
-</body>
-</html>
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="font-bold text-lg">Sarah Lopez</h3>
+          <p class="text-sm text-gray-400 mb-4">
+            Denver • Full Replacement
+          </p>
+
+          <button class="bg-green-500 text-black font-bold px-4 py-3 rounded-xl w-full">
+            Buy Lead — $79
+          </button>
+        </div>
+
+        <div class="glass p-5 rounded-2xl">
+          <h3 class="font-bold text-lg">Mike Johnson</h3>
+          <p class="text-sm text-gray-400 mb-4">
+            Phoenix • Roof Inspection
+          </p>
+
+          <button class="bg-green-500 text-black font-bold px-4 py-3 rounded-xl w-full">
+            Buy Lead — $29
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function goPricing() {
+      document.getElementById("landing").classList.add("hidden");
+      document.getElementById("pricing").classList.remove("hidden");
+    }
+
+    function backLanding() {
+      document.getElementById("pricing").classList.add("hidden");
+      document.getElementById("landing").classList.remove("hidden");
+    }
+
+    function openGate() {
+      document.getElementById("pricing").classList.add("hidden");
+      document.getElementById("gate").classList.remove("hidden");
+    }
+
+    function unlock() {
+      const key = document.getElementById("key").value.trim();
+
+      if (key === "NSKY-LEADS-2026") {
+        document.getElementById("gate").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+      } else {
+        document.getElementById("error").innerText =
+          "Invalid license key. Please
